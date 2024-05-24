@@ -12,11 +12,13 @@ public class PageTests : PageTest
         await using var app = await appHost.BuildAsync();
         await app.StartAsync();
 
+        // find the named resource I need
         var webResource = appHost.Resources.Where(r=>r.Name == "webfrontend").FirstOrDefault();
 
+        // get the 'http' endpoint for the resource
         var endpoint = webResource.Annotations.OfType<EndpointAnnotation>().Where(x => x.Name == "http").FirstOrDefault();
 
-
+        // navigate to the UriString of the allocated endpoint 
         await Page.GotoAsync(endpoint.AllocatedEndpoint.UriString);
 
         await Page.ScreenshotAsync(new PageScreenshotOptions { Path = ".\\screenshot.png" });
